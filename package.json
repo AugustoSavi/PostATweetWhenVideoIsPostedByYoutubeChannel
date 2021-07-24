@@ -1,6 +1,6 @@
 {
   "name": "PostATweetWhenVideoIsPostedByChannel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "express": "^4.17.1",
     "moment": "^2.29.1",
     "twit": "^2.2.11",
     "yt-channel-info": "^2.2.0",

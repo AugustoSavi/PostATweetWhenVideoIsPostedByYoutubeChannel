@@ -3,13 +3,23 @@ const ytdl = require('ytdl-core');
 const ytch = require('yt-channel-info');
 const moment = require('moment');
 const Tweetar = require('./tweetar');
+const express = require('express')
+const app = express()
+
+app.get('/', (req, res) => {
+    res.send('server is running!')
+})
+
+app.listen(3000, () => {
+    console.log(`Servidor Subiu`);
+})
 
 const history = {
     lastVideoId: '',
     today: ''
 }
 
-let interval = setInterval(info, parseInt(process.env.CHECK_INTERVAL_MS));
+setInterval(info, parseInt(process.env.CHECK_INTERVAL_MS));
 
 async function info() {
     console.log('---------------Iniciando Verificação---------------')
