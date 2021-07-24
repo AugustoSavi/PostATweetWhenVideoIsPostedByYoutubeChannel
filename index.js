@@ -5,14 +5,15 @@ const moment = require('moment');
 const Tweetar = require('./tweetar');
 const express = require('express')
 const app = express()
+const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
     res.send('server is running!')
 })
 
-app.listen(3000, () => {
-    console.log(`Servidor Subiu`);
-})
+app.listen(PORT, () => {
+    console.log(`Our app is running on port ${ PORT }`);
+});
 
 const history = {
     lastVideoId: '',
