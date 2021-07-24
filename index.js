@@ -4,6 +4,7 @@ const ytch = require('yt-channel-info');
 const moment = require('moment');
 const Tweetar = require('./tweetar');
 const express = require('express')
+const http = require('http');
 const app = express()
 const PORT = process.env.PORT || 3000;
 
@@ -21,6 +22,10 @@ const history = {
 }
 
 setInterval(info, parseInt(process.env.CHECK_INTERVAL_MS));
+setInterval(function() {
+    http.get(process.env.HEROKU_APP_URL);
+    console.log('KeepAwake')
+}, 300000);
 
 async function info() {
     console.log('---------------Iniciando Verificação---------------')
