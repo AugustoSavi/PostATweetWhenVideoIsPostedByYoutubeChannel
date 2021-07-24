@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send(`app is running: ${history}`);
+    res.send(`app is running: ${JSON.stringify(history)}`);
 })
 
 app.listen(PORT, () => {
@@ -51,16 +51,22 @@ async function info() {
     }).catch((err) => {
         again('get full data vídeo \n' + err);
     });
+
+    console.log('---------------videoInfo---------------')
+    console.log(`${JSON.stringify(videoInfo)}`);
 }
 
 function validateVideoPost(fullDataVideo) {
-
+    console.log('---------------validateVideoPost---------------')
+    
     if (fullDataVideo.videoDetails?.publishDate === history.today && fullDataVideo.videoDetails?.videoId !== history.lastVideoId) {
+        console.log('---------------is vídeo novo---------------')
+        
         history.lastVideoId = fullDataVideo.videoDetails.videoId;
         Tweetar(fullDataVideo.videoDetails);
     }
     else {
-        console.log('---------------Sem Vídeo novo---------------')
+        console.log('---------------não é vídeo novo---------------')
     }
 }
 
