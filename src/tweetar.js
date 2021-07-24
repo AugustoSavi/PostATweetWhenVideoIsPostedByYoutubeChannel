@@ -20,12 +20,13 @@ module.exports = (fullDataVideo) => {
     TwitCliente.post('statuses/update', { status: statusMessage },
         function (err, data, response) {
             if (err) {
-                console.log('---------------error---------------')
+                console.log('---------------error TwitCliente.post()---------------')
                 console.log(err)
             }
             if (data) {
-                console.log('---------------publicou---------------')
+                console.log('---------------publicou TwitCliente.post()---------------')
             }
         }
     )
+
 }

@@ -5,11 +5,11 @@ const moment = require('moment');
 const Tweetar = require('./tweetar');
 const express = require('express')
 const http = require('http');
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('server is running!')
+    res.send(`app is running: ${history}`);
 })
 
 app.listen(PORT, () => {
@@ -24,7 +24,7 @@ const history = {
 setInterval(info, parseInt(process.env.CHECK_INTERVAL_MS));
 setInterval(function() {
     http.get(process.env.HEROKU_APP_URL);
-    console.log('KeepAwake')
+    console.log('KeepAwake');
 }, 300000);
 
 async function info() {
@@ -39,7 +39,7 @@ async function info() {
         videoInfo.lastVideoBasicInfo = videos.items[0];
 
     }).catch((err) => {
-        again(err)
+        again('get basic data vídeo \n' + err);
     });
 
     // get full data vídeo
@@ -49,7 +49,7 @@ async function info() {
         validateVideoPost(videoInfo.lastVideoFullInfo);
 
     }).catch((err) => {
-        again(err)
+        again('get full data vídeo \n' + err);
     });
 }
 
@@ -65,7 +65,7 @@ function validateVideoPost(fullDataVideo) {
 }
 
 function again(err) {
-    console.log(err)
+    console.log(err);
     sleep(20000);
     info();
 
