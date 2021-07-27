@@ -2,18 +2,20 @@ require('dotenv').config();
 const ytdl = require('ytdl-core');
 const ytch = require('yt-channel-info');
 const moment = require('moment');
-const Tweetar = require('./tweetar');
 const express = require('express')
 const http = require('http');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const Tweetar = require('./tweetar');
+const FileManager = require('./fileManager');
 
 app.get('/', (req, res) => {
     res.send(`app is running: ${JSON.stringify(history)}`);
 })
 
 app.listen(PORT, () => {
-    console.log(`Our app is running on port ${ PORT }`);
+    console.log(`Our app is running on port ${PORT}`);
 });
 
 const history = {
@@ -21,16 +23,21 @@ const history = {
     today: ''
 }
 
-setInterval(info, parseInt(process.env.CHECK_INTERVAL_MS));
-setInterval(function() {
+setInterval(init, parseInt(process.env.CHECK_INTERVAL_MS));
+setInterval(function () {
     http.get(process.env.HEROKU_APP_URL);
     console.log('KeepAwake');
 }, 300000);
 
-async function info() {
-    console.log('---------------Iniciando Verificação---------------')
+async function init() {
+    console.log('---Iniciando Verificação---')
 
     history.today = moment().format('YYYY-MM-DD');
+
+    // get history file
+    await FileManager.read().then((historyFile) => {
+        history.lastVideoId = JSON.parse(historyFile).lastVideoId
+    })
 
     const videoInfo = {};
 
@@ -51,29 +58,29 @@ async function info() {
     }).catch((err) => {
         again('get full data vídeo \n' + err);
     });
-
-    console.log('---------------videoInfo---------------')
-    console.log(`${JSON.stringify(videoInfo)}`);
 }
 
-function validateVideoPost(fullDataVideo) {
-    console.log('---------------validateVideoPost---------------')
-    
+async function validateVideoPost(fullDataVideo) {
+    console.log('---validateVideoPost---')
+
     if (fullDataVideo.videoDetails?.publishDate === history.today && fullDataVideo.videoDetails?.videoId !== history.lastVideoId) {
-        console.log('---------------is vídeo novo---------------')
-        
+        console.log('---is vídeo novo---')
+
+        //save de history
         history.lastVideoId = fullDataVideo.videoDetails.videoId;
+        await FileManager.write(JSON.stringify(history));
+
         Tweetar(fullDataVideo.videoDetails);
     }
     else {
-        console.log('---------------não é vídeo novo---------------')
+        console.log('---não é vídeo novo---')
     }
 }
 
 function again(err) {
     console.log(err);
     sleep(20000);
-    info();
+    init();
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
